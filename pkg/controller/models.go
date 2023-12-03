@@ -10,4 +10,7 @@ type Controller struct {
 
 	// topics
 	Topics map[string]queue.Queue
+
+	// TCP
+	TCPS *TCPServer
 }
