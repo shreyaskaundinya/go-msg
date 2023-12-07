@@ -1,7 +1,8 @@
 package message
 
 type Message struct {
-	Key   string
-	Value string
-	Topic string
+	Topic  string `json:"topic"`
+	Key    string `json:"key"`
+	Value  string `json:"value"`
+	Offset int64  `json:"offset"`
 }

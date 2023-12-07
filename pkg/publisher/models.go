@@ -1,10 +1,22 @@
 package publisher
 
-type Publisher struct {
-	// hostname
-	Hostname string
-	// port
-	Port int
+import (
+	"net"
+	"sync"
 
-	// worker connections
+	"github.com/shreyaskaundinya/go-msg/pkg/message"
+)
+
+type Publisher struct {
+	// controller
+	controllerServers []string
+
+	// buffer of messages to be sent
+	sendBufferChan chan message.Message
+
+	// wg
+	wg sync.WaitGroup
+
+	// conn
+	conn net.Conn
 }

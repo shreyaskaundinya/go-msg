@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 
@@ -36,6 +37,7 @@ func (t *TCPServer) Init(hostname string, port int) {
 func (t *TCPServer) Serve() {
 	for {
 		conn, err := (*t.Listener).Accept()
+
 		if err != nil {
 			zap.L().Sugar().Errorln(err)
 			continue
@@ -43,21 +45,33 @@ func (t *TCPServer) Serve() {
 
 		go t.handleConnection(conn)
 	}
+	// zap.L().Sugar().Info("[TCP] Stopped listening")
 }
 
 func (t *TCPServer) handleConnection(conn net.Conn) {
-	// Close the connection when we're done
-	defer conn.Close()
+	for {
+		// Read incoming data
+		s, err := bufio.NewReader(conn).ReadString('\n')
 
-	// Read incoming data
-	buf := make([]byte, 2048)
-	_, err := conn.Read(buf)
+		if err != nil {
+			if err.Error() != "EOF" {
+				zap.L().Sugar().Errorln(err)
+			}
+			conn.Close()
+			zap.L().Sugar().Info("[TCP] Closed connection")
+			return
+		}
 
-	if err != nil {
-		fmt.Println(err)
-		return
+		// Print the incoming data
+		zap.L().Sugar().Infof("[TCP] Received: %s", s)
+
+		if s == "EOF" {
+			conn.Close()
+			zap.L().Sugar().Info("[TCP] Closed connection")
+			return
+		} else {
+			conn.Write([]byte("ACK\n"))
+		}
+
 	}
-
-	// Print the incoming data
-	fmt.Printf("[TCP] Received: %s", buf)
 }

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/shreyaskaundinya/go-msg/pkg/message"
 	"github.com/shreyaskaundinya/go-msg/pkg/queue"
 	"github.com/shreyaskaundinya/go-msg/pkg/utils"
@@ -8,7 +10,13 @@ import (
 )
 
 func TestQueue() {
-	utils.InitLogger()
+	f, err := os.OpenFile("S:/Documents/PROJECTS/go-msg/random/app.log", os.O_WRONLY, 0644)
+
+	if err != nil {
+		panic(err)
+	}
+
+	utils.InitLogger(f)
 
 	q := queue.NewQueue("test")
 
