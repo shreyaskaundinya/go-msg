@@ -12,7 +12,7 @@ func (q *Queue) Send(msg message.Message) {
 func (q *Queue) enqueue(item message.Message) {
 	q.Lock.Lock()
 	defer q.Lock.Unlock()
-	zap.L().Sugar().Infof("[QUEUE] Enqueueing message %v", item)
+	zap.L().Sugar().Infof("[QUEUE] Received message %v", item)
 
 	q.Data = append(q.Data, item)
 	q.Top++

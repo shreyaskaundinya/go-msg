@@ -34,21 +34,21 @@ func (t *TCPServer) Init(hostname string, port int) {
 	t.Listener = &tcp
 }
 
-func (t *TCPServer) Serve() {
+func (c *Controller) Serve() {
 	for {
-		conn, err := (*t.Listener).Accept()
+		conn, err := (*c.TCPS.Listener).Accept()
 
 		if err != nil {
 			zap.L().Sugar().Errorln(err)
 			continue
 		}
 
-		go t.handleConnection(conn)
+		go c.handleConnection(conn)
 	}
 	// zap.L().Sugar().Info("[TCP] Stopped listening")
 }
 
-func (t *TCPServer) handleConnection(conn net.Conn) {
+func (c *Controller) handleConnection(conn net.Conn) {
 	for {
 		// Read incoming data
 		s, err := bufio.NewReader(conn).ReadString('\n')
@@ -63,9 +63,12 @@ func (t *TCPServer) handleConnection(conn net.Conn) {
 		}
 
 		// Print the incoming data
-		zap.L().Sugar().Infof("[TCP] Received: %s", s)
+		// zap.L().Sugar().Infof("[TCP] Received: %s", s)
+		err = c.ReceiveMessage(s)
 
-		if s == "EOF" {
+		if err != nil {
+			zap.L().Sugar().Errorln(err)
+		} else if s == "EOF" {
 			conn.Close()
 			zap.L().Sugar().Info("[TCP] Closed connection")
 			return

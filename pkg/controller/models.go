@@ -1,6 +1,10 @@
 package controller
 
-import "github.com/shreyaskaundinya/go-msg/pkg/queue"
+import (
+	"sync"
+
+	"github.com/shreyaskaundinya/go-msg/pkg/queue"
+)
 
 type Controller struct {
 	// hostname
@@ -9,7 +13,10 @@ type Controller struct {
 	Port int
 
 	// topics
-	Topics map[string]queue.Queue
+	Topics map[string]*queue.Queue
+
+	// lock
+	TopicsLock sync.RWMutex
 
 	// TCP
 	TCPS *TCPServer

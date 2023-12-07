@@ -8,6 +8,7 @@ import (
 )
 
 func (p *Publisher) flushBufferRoutine() {
+	// TODO : buffer and send in batches/flush on exit/flush on timeout
 	for msg := range p.sendBufferChan {
 		// select {
 		// case <-p.bufferClearChan:
@@ -47,11 +48,11 @@ func (p *Publisher) sendToController(msg message.Message) error {
 		zap.L().Error("[PUBLISHER] Error sending message to controller", zap.Error(err))
 		return err
 	}
-	zap.L().Sugar().Info("[PUBLISHER] Wrote to controller")
+	// zap.L().Sugar().Info("[PUBLISHER] Wrote to controller")
 
 	// zap.L().Sugar().Info("[PUBLISHER] Reading response from controller")
 
-	buf := make([]byte, 1024)
+	buf := make([]byte, 48)
 	n, err := p.conn.Read(buf)
 
 	if err != nil {

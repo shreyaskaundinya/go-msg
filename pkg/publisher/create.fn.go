@@ -16,6 +16,8 @@ func NewPublisher(ControllerServers []string) *Publisher {
 	}
 
 	p.connect()
+	// TODO : possibly make this configurable
+	// TODO : number of routines to flush buffer
 	go p.flushBufferRoutine()
 	// go p.flushBufferRoutine()
 	// go p.flushBufferRoutine()

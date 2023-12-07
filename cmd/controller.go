@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"sync"
 	"time"
@@ -42,8 +43,11 @@ func TestController() {
 
 			// zap.L().Sugar().Info("Sending message to controller")
 
-			for j := 0; j < 20000; j++ {
-				p.SendKV("test", fmt.Sprintf("%d", i), fmt.Sprintf("%d", j))
+			for j := 0; j < 10; j++ {
+				p.SendKV(fmt.Sprintf("test%d", i), fmt.Sprintf("%d", i), fmt.Sprintf("%d", j))
+				// t :=
+				// zap.L().Sugar().Infof("Sleeping for %v", t)
+				time.Sleep(time.Duration(+rand.Float64()*50) * time.Millisecond)
 			}
 
 			p.Close()
